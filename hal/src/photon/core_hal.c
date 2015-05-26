@@ -54,12 +54,14 @@ const unsigned HardFaultIndex = 3;
 const unsigned SysTickIndex = 15;
 const unsigned USART1Index = 53;
 const unsigned ButtonExtiIndex = BUTTON1_EXTI_IRQ_INDEX;
+const unsigned TIM7Index = 71;
 
 void SysTickOverride(void);
 void SysTickChain(void);
 void Mode_Button_EXTI_irq(void);
 void HAL_USART1_Handler(void);
 void HardFault_Handler(void);
+void TIM7_override(void);
 
 void override_interrupts(void) {
 
@@ -69,6 +71,7 @@ void override_interrupts(void) {
     isrs[SysTickIndex] = (uint32_t)SysTickOverride;
     isrs[USART1Index] = (uint32_t)HAL_USART1_Handler;
     isrs[ButtonExtiIndex] = (uint32_t)Mode_Button_EXTI_irq;
+    isrs[TIM7Index] = (uint32_t)TIM7_override;  // WICED uses this for a JTAG watchdog handler
     SCB->VTOR = (unsigned long)isrs;
 }
 
@@ -480,6 +483,8 @@ void SysTickOverride(void)
     }
 
     HAL_SysTick_Handler();
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_SysTick, NULL);
 }
 
 /**
@@ -519,6 +524,8 @@ void TIM1_CC_irq(void)
     {
         HAL_TIM1_Handler();
     }
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM1_CC, NULL);
 }
 
 /**
@@ -545,6 +552,8 @@ void TIM2_irq(void)
             BUTTON_EXTI_Config(BUTTON1, ENABLE);
         }
     }
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM2, NULL);
 }
 
 /**
@@ -558,6 +567,8 @@ void TIM3_irq(void)
     {
         HAL_TIM3_Handler();
     }
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM3, NULL);
 }
 
 /**
@@ -571,6 +582,8 @@ void TIM4_irq(void)
     {
         HAL_TIM4_Handler();
     }
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM4, NULL);
 }
 
 /**
@@ -584,6 +597,18 @@ void TIM5_irq(void)
     {
         HAL_TIM5_Handler();
     }
+    
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM5, NULL);
+}
+
+void TIM6_DAC_irq(void)
+{
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM6, NULL);
+}
+
+void TIM7_override(void)
+{
+    HAL_System_Interrupt_Trigger(SysInterrupt_TIM7, NULL);
 }
 
 
