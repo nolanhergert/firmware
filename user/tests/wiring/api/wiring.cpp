@@ -1,9 +1,6 @@
 
 #include "testapi.h"
 
-extern "C" {
-#include "stm32f2xx_tim.h"
-}
     
 test(api_wiring_pinMode) {
         
@@ -11,4 +8,29 @@ test(api_wiring_pinMode) {
     API_COMPILE(mode=getPinMode(D0));    
     API_COMPILE(pinMode(D0, mode));
     
+}
+
+void D0_callback()
+{    
+}
+
+test(api_wiring_interrupt) {
+        
+    API_COMPILE(interrupts());
+    API_COMPILE(noInterrupts());
+    
+    API_COMPILE(attachInterrupt(D0, D0_callback, RISING));
+    API_COMPILE(detachInterrupt(D0));
+   
+}
+
+void TIM3_callback()
+{    
+}
+
+test(api_wiring_system_interrupt) {
+            
+    API_COMPILE(attachSystemInterrupt(SysInterrupt_TIM3, TIM3_callback));
+    API_COMPILE(detachSystemInterrupt(SysInterrupt_TIM3));
+   
 }
