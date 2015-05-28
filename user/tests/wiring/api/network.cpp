@@ -1,6 +1,6 @@
 /**
  ******************************************************************************
- * @file    cloud.cpp
+ * @file    network.cpp
  * @authors Matthew McGowan
  * @date    13 January 2015
  ******************************************************************************
@@ -21,20 +21,13 @@
  ******************************************************************************
  */
 
+
 #include "testapi.h"
 
-test(api_wifi_resolve) {
+test(api_ip_address) {
     
-    API_COMPILE(WiFi.resolve(String("abc.def.com")));
-    API_COMPILE(WiFi.resolve("abc.def.com"));
-}
-
-test(api_wifi_selectantennt) {
+    API_COMPILE(IPAddress(HAL_IPAddress()));
     
-    API_COMPILE(WiFi.selectAntenna(ANT_AUTO));
-    API_COMPILE(WiFi.selectAntenna(ANT_INTERNAL));
-    API_COMPILE(WiFi.selectAntenna(ANT_EXTERNAL));
+    
     
 }
-    
-
